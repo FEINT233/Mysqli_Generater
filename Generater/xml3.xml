@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="sakila"
+		servername="localhost"
+		username="root"
+		password="123456"
+		port="3306">
+
+	<table name="actor" namerule="camelCase"></table>
+	<table name="film_actor" namerule="camelCase"></table>
+</database>

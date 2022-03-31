@@ -1,0 +1,228 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<style>
+    .row {
+            padding: 8px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 2px solid #bdbbbb; 
+        }
+</style>
+</head>
+<body>
+    <div class="container" id="contain">
+        <div class="row" style="border: 0;" id="database">
+            <div class="col-md-6">
+                <label for="dataBaseName">数据库名</label>
+                <input type="text" class="form-control" id="databaseName" placeholder="数据库名">
+            </div>
+        </div>
+        <div class="row" style="border: 0;" id="tables">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>表名</label>
+                    <input type="text" class="form-control" placeholder="表名">
+                    <label>是否使用驼峰命名法</label>
+                    <input type="checkbox" checked="checked">
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>字段名</th>
+                            <th>是否为主键</th>
+                            <th>删除</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="字段名">
+                            </td>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="delTdFieldRow(this)">删除字段</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary" onclick="addFieldRow(this)">添加字段</button>
+                    <button type="button" class="btn btn-danger" onclick="delTable(this)">删除表</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="submitDiv">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" onclick="addTableContent()">添加表</button>
+                <button type="button" class="btn btn-success" onclick="sumbitData()">提交</button>
+            </div>
+            <div class="col-md-4">
+                <a id = "downLink" href=""></a>
+                <p id = "msg" style="color: black;"> </p>
+                <p id = "msg2" style="color: black;"> </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var tableArray;
+    var table;
+    var fieldName;
+
+    $(function(){
+        $("#downLink").attr("href", "").text("");
+        $("#msg").text("");
+    });
+    
+    function delTable(obj){
+        if($(".table").length == 1) return;
+        else $(obj).parent().parent().remove();
+    }
+
+    function delTdFieldRow(obj){
+        if($(obj).parent().parent().parent().children("tr").length == 1) return;
+        else $(obj).parent().parent().remove();
+    }
+
+    function addTableContent(){
+        var thead = $("<thead></thead>").append($("<tr></tr>").append($("<th>#</th>")).append($("<th>字段名</th>")).append($("<th>是否为主键</th>")).append($("<th>删除</th>")));
+        var indexTd = $("<td></td>").text(1);
+        var fieldInputTd = $("<td></td>").append($("<input>").attr("type", "text").attr("placeholder", "字段名").addClass("form-control"));
+        var checkboxTd = $("<td></td>").append($("<input>").attr("type", "checkbox"));
+        var delTd = $("<td></td>").append($("<button></button>").attr("type", "button").attr("onclick", "delTdFieldRow(this)").addClass("btn btn-danger").text("删除字段"));
+        var tbody = $("<tbody></tbody>").append($("<tr></tr>").append(indexTd).append(fieldInputTd).append(checkboxTd).append(delTd));
+        var tableName = $("<div></div>").append($("<label></label>").text("表名")).append($("<input>").attr("type", "text").attr("placeholder", "表名").addClass("form-control")).append($("<label></label>").text("是否使用驼峰命名法")).append($("<input>").attr("type", "checkbox").attr("checked", "checked")).addClass("col-md-4");
+        var table = $("<table></table>").addClass("table").append(thead).append(tbody);
+        var buttonRow = $("<div></div>").append($("<button></button>").attr("type","button").attr("onclick", "addFieldRow(this)").addClass("btn btn-primary").text("添加字段")).append($("<button></button>").attr("type","button").attr("onclick", "delTable(this)").addClass("btn btn-danger").text("删除表")).addClass("col-md-4");
+        $("<div></div>").append(tableName).append(table).append(buttonRow).addClass("row").appendTo("#tables");
+    }
+
+    function addFieldRow(obj){
+        var index = $(obj).parent().parent().children("table").children("tbody").children("tr").length + 1;
+        var indexTd = $("<td></td>").text(index);
+        var fieldInputTd = $("<td></td>").append($("<input>").attr("type", "text").attr("placeholder", "字段名").addClass("form-control"));
+        var checkboxTd = $("<td></td>").append($("<input>").attr("type", "checkbox"));
+        var delTd = $("<td></td>").append($("<button></button>").attr("type", "button").attr("onclick", "delTdFieldRow(this)").addClass("btn btn-danger").text("删除字段"));
+        var tr = $("<tr></tr>").append(indexTd).append(fieldInputTd).append(checkboxTd).append(delTd);
+        $(obj).parent().parent().children("table").children("tbody").append(tr);
+    }
+    
+    function getData(){
+        $("#msg").text("");
+        $("#msg2").text("");
+
+        var flag = true;
+        tableArray = new Array();
+        if($("#databaseName").val() == ""){
+            $("#msg").text("数据库名为空").css("color", "red");
+            return false;
+        }
+        $("#tables").children().each(function(index, e1){
+            table = {};
+            table["databaseName"] = $("#databaseName").val();
+            $(e1).children().each(function(index, e2){
+                if(index == 0){
+                    $(e2).children("input").each(function(index, e5){
+                        if($(e5).attr("type") == "text"){
+                            if($(e5).val() != ""){
+                                table["tableName"] = $(e5).val();
+                            }else{
+                                $("#msg").text("表名为空").css("color", "red");
+                                flag = false;
+                                return false;
+                            }
+                        }
+                        if($(e5).attr("type") == "checkbox"){
+                            if($(e5).is(':checked')){
+                                table["nameRule"] = "camelCase";
+                            }else{
+                                table["nameRule"] = "none";
+                            }
+                        }
+                    });
+                }else if(index == 1){
+                    table["primaryKeyArray"] = new Array();
+                    table["fieldNameArray"] = new Array();
+                    //table
+                    $(e2).children("tbody").children().each(function(index, e3){
+                        //tr
+                        $(e3).children().each(function(index, e4){
+                            if(index == 1){//fieldName
+                                if($(e4).children("input").val() != ""){
+                                    fieldName = $(e4).children("input").val();
+                                }else{
+                                    $("#msg").text("字段名为空").css("color", "red");
+                                    flag = false;
+                                    return false;
+                                }
+                            }
+                            if(index == 2){//isPK?
+                                if($(e4).children("input").is(':checked')){
+                                    table["primaryKeyArray"].push(fieldName);
+                                }else{
+                                    table["fieldNameArray"].push(fieldName);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            console.log(index);
+            tableArray.push(table);
+            console.log(table);
+            if($("#tables").children().length == index + 1 && flag == false){
+                return false;
+            }else{
+                flag = true;
+            }
+        });
+        if(flag == false){
+            return false;
+        }
+        console.log(tableArray);
+        return tableArray;
+    }
+
+    function sumbitData(){
+        $("#downLink").attr("href", "").text("");
+
+        var tableArray = getData();
+        if(tableArray == false){
+            $("#msg2").text("请重新填写数据").css("color", "red");
+            return false;
+        }
+        $.ajax({
+            async: true,
+            url: "jquery_ajax.php",  
+            type: "POST",
+            data:{"tableArray":tableArray},
+            dataType: "json",
+            success: function(result){
+                console.log(result.code);
+                console.log(result.msg);
+                console.log(result.code);
+                if(result.code == "400"){
+                    $("#msg").text(result.msg);
+                }else if(result.code == "200"){
+                    $("#downLink").attr("href", result.link);
+                    $("#downLink").text(result.guid+".zip")
+                    $("#msg").text(result.msg).css("color", "green");;
+                }else if(result.code == "300"){
+                    $("#msg").text(result.msg).css("color", "red");
+                }
+            },
+            error: function(result){
+                alert("error");
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="school">
+	<!-- 
+	namerule 在生成po类时中表字段名的命名规则 可选none不使用,camelCase驼峰命名法
+	默认为none不使用 
+	不过更加推荐使用camelCase驼峰命名法 数据库字段起名也推荐使用student_name,student_sex 
+	-->
+	<table name="student" namerule="camelCase"><!-- 表 name是名字 -->
+		<field name="stu_id" isPK="TRUE"></field><!-- 字段 name是名字 -->
+		<field name="stu_name" ></field>
+		<field name="stu_sex" ></field>
+	</table>
+	<table name="course">
+		<field name="course_id" ></field>
+		<field name="course_name" ></field>
+	</table>
+	<table name="elective">
+		<field name="elective_id" ></field>
+		<field name="stu_id" ></field>
+		<field name="course_id" ></field>
+	</table>
+</database>
